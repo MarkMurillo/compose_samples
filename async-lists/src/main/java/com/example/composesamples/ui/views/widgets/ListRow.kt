@@ -16,9 +16,8 @@ import com.example.composesamples.data.LandscapeImage
 import kotlin.random.Random
 
 @Composable
-fun ListRow(landscapeImage: LandscapeImage) {
-    val sharedModifier = Modifier
-        .fillMaxWidth()
+fun ListRow(landscapeImage: LandscapeImage, modifier: Modifier = Modifier) {
+    val sharedModifier = modifier.fillMaxWidth()
         .height(250.dp)
 
     val loading = remember { mutableStateOf(false) }

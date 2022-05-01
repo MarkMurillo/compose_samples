@@ -1,14 +1,19 @@
 package com.example.composesamples.ui.views
 
+import android.widget.Toast
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.composesamples.data.LandscapeImage
 import com.example.composesamples.ui.theme.White
@@ -38,7 +43,8 @@ fun LandscapeList(viewModel: MainViewModel) {
     // This means that the imageItems we declare here is actually
     // backed by the value of the State object we get from observeAsState()
     val imageItems by viewModel.curList.observeAsState()
-    val isLoading = viewModel.isLoading.observeAsState()
+
+    val isLoading = viewModel.isLoading
 
     val lazyListState = rememberLazyListState()
 
@@ -46,7 +52,18 @@ fun LandscapeList(viewModel: MainViewModel) {
         listState = lazyListState,
         listItems = imageItems,
         listItemView = {
-            ListRow(landscapeImage = it)
+            val curContext = LocalContext.current
+
+            ListRow(
+                landscapeImage = it,
+                modifier = Modifier.clickable(
+                    remember { MutableInteractionSource() },
+                    indication = rememberRipple(bounded = true),
+                    onClick = {
+                        Toast.makeText(curContext, "Wow...", Toast.LENGTH_SHORT).show()
+                    }
+                )
+            )
         },
         emptyView = {
             Surface(color = Color.Black, modifier = Modifier.fillMaxSize()) {
