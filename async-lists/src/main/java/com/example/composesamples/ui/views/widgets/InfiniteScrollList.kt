@@ -5,20 +5,22 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import kotlinx.coroutines.flow.filter
 
 @Composable
-fun <T> InfiniteScrollList(listState: LazyListState,
-                           listItems: List<T>?,
+fun <T> InfiniteScrollList(listItems: List<T>?,
                            listItemView: @Composable (curItem: T) -> Unit,
                            emptyView: @Composable () -> Unit,
                            loadNextPage: suspend (nextPage: Int) -> Boolean,
                            loadingOverlay: @Composable ((isLoading: Boolean) -> Unit)? = null,
+                            // We need this to be a state boolean since we should be
+                            // listening to the latest updates.
                            isLoading: State<Boolean?>
 ) {
-
+    val listState = rememberLazyListState()
     val hasMoreItems = remember { mutableStateOf(true) }
     val displayEmptyList = remember { mutableStateOf(false) }
 
@@ -42,6 +44,8 @@ fun <T> InfiniteScrollList(listState: LazyListState,
         if (displayEmptyList.value) {
             emptyView()
         } else {
+            // LazyColumn is the equivalent of RecyclerView where
+            // it only renders enough to display on the screen.
             LazyColumn(state = listState) {
                 listItems?.let { curItems ->
                     // Set our items

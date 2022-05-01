@@ -46,10 +46,7 @@ fun LandscapeList(viewModel: MainViewModel) {
 
     val isLoading = viewModel.isLoading
 
-    val lazyListState = rememberLazyListState()
-
     InfiniteScrollList<LandscapeImage>(
-        listState = lazyListState,
         listItems = imageItems,
         listItemView = {
             val curContext = LocalContext.current
