@@ -12,18 +12,23 @@ class MainViewModel: ViewModel() {
     private var _curList = MutableLiveData<List<LandscapeImage>>()
     var curList: LiveData<List<LandscapeImage>> = _curList
 
-    private var _isLoading = MutableLiveData<Boolean>()
+    private var _isLoading = MutableLiveData<Boolean>().apply { value = false }
     var isLoading: LiveData<Boolean> = _isLoading
 
-    init {
-        _curList.postValue(imageGenerator.getInitialLandscapeImageList().toMutableList())
-    }
 
-    suspend fun getNextPage() {
+    suspend fun getNextPage(nextPageNum: Int): Boolean {
         _isLoading.postValue(true)
-        val nextPage = imageGenerator.getNextPageLandscapeImages()
-        val newList = (_curList.value ?: mutableListOf()) + nextPage
+        val nextPage = imageGenerator.getNextPageLandscapeImages(nextPageNum)
+        val isLast = nextPage.second
+
+        if (isLast) {
+            _isLoading.postValue(false)
+            return false
+        }
+
+        val newList = (_curList.value ?: listOf()) + nextPage.first
         _isLoading.postValue(false)
         _curList.postValue(newList)
+        return true
     }
 }
