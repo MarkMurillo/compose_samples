@@ -26,12 +26,13 @@ class LandscapeGenerator {
     }
 
     suspend fun getNextPageIds(): List<Int> {
+        // Put a delay to simulate API call.
         delay(2000)
         return LANDSCAPE_DRAWABLE_IDS.toList()
     }
 
     suspend fun getNextPageLandscapeImages(page: Int): Pair<List<LandscapeImage>, Boolean> {
-        //delay(rngSeed.nextLong(200, 2000))
+        // Put a delay to simulate API call.
         delay(2000)
         if (page >= MAX_PAGES) return Pair(emptyList(), true)
         return Pair(LANDSCAPE_URLS.map { LandscapeImage(it) }, false)
