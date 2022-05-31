@@ -13,6 +13,8 @@ class MainActivity : ComponentActivity() {
             // Apply general app theme.
             ComposeSamplesTheme {
                 MainView()
+                // Testing for git
+                // Add more stuff here
             }
         }
     }
